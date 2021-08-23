@@ -1,30 +1,20 @@
-const express = require('express');
-const debug = require('debug')('app');
-const morgan = require('morgan');
-const passport = require('passport');
-const authRoutes = require('./src/routes/auth.routes');
-const userRoutes = require('./src/routes/user.routes');
-
 require('dotenv').config();
+const express = require('express');
+const debug = require('debug')('server');
+const morgan = require('morgan');
 
-require('./src/passport/jwt.strategy');
-require('./src/passport/local.strategy');
+require('./src/config/mongooseConfig');
 
-require('./src/config/mongoose.config');
-
-const app = express();
+const server = express();
 const port = process.env.PORT || 4000;
 
-app.use(morgan('dev'));
+require('./src/config/passportConfig')(server);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+server.use(morgan('dev'));
+server.use(express.json());
 
-app.use('/', authRoutes);
-app.use(
-  '/user',
-  passport.authenticate('jwt', { session: false }),
-  userRoutes,
-);
+const router = require('./src/routes/router');
 
-app.listen(port, debug(`server is running on port ${port}`));
+server.use('/', router);
+
+server.listen(port, debug(`server is running on port ${port}`));

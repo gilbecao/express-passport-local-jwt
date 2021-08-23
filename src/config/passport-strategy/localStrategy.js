@@ -1,6 +1,6 @@
 const passport = require('passport');
 const localStrategy = require('passport-local');
-const User = require('../models/user.model');
+const User = require('../../models/userModel');
 
 passport.use(
   'signup',

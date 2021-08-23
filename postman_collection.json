@@ -1,58 +1,52 @@
 {
 	"info": {
-		"_postman_id": "3cebbd0b-2fd4-4d23-9ab6-e894b469661d",
-		"name": "Passport JWT",
+		"_postman_id": "ed4f51d6-9eab-47cd-9129-96b82bdb3193",
+		"name": "passport-local",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "home",
+			"name": "unprotected",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:4000/",
+					"raw": "http://localhost:5000/unprotected",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "4000",
+					"port": "5000",
 					"path": [
-						""
+						"unprotected"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "signup",
+			"name": "register",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "email",
-							"value": "pepe@heroes.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "123",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"nacho@gmail.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/signup",
+					"raw": "http://localhost:5000/register",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "4000",
+					"port": "5000",
 					"path": [
-						"signup"
+						"register"
 					]
 				}
 			},
@@ -64,27 +58,21 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "email",
-							"value": "pepe@heroes.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "123",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"nacho@gmail.com\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/login",
+					"raw": "http://localhost:5000/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "4000",
+					"port": "5000",
 					"path": [
 						"login"
 					]
@@ -93,13 +81,38 @@
 			"response": []
 		},
 		{
-			"name": "token",
+			"name": "protected",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjI5NzMyMzAyLCJleHAiOjE2Mjk3MzIzNjJ9.OQVrMnJ8rL5j45vJ4eTOARqHng7J8Dml20RR-ojFEQU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/protected",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"protected"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refreshToken",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYwYWZhM2M3MzMxZmZiMDZhNDZkMjljNiIsImVtYWlsIjoicGVwZUBoZXJvZXMuY29tIn0sImlhdCI6MTYyMjEyODE4Nn0.9Iww0wxeCV0gnzcS4e6h3tWSdEjHB8QiqXuoSw0Z_YM\"\n}",
+					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxMjM5MWEyODliN2MyODc5MjliZDY3YiIsImVtYWlsIjoibmFjaG9AZ21haWwuY29tIn0sImlhdCI6MTYyOTczMjEwM30.nbPb4z74oXIm3fbImUWFzDH6GoOenQiPeQiSgLx7gYo\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -107,14 +120,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/token",
+					"raw": "http://localhost:5000/refreshToken",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "4000",
+					"port": "5000",
 					"path": [
-						"token"
+						"refreshToken"
 					]
 				}
 			},
@@ -127,7 +140,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYwYWZhM2M3MzMxZmZiMDZhNDZkMjljNiIsImVtYWlsIjoicGVwZUBoZXJvZXMuY29tIn0sImlhdCI6MTYyMjEyODE4Nn0.9Iww0wxeCV0gnzcS4e6h3tWSdEjHB8QiqXuoSw0Z_YM\"\n}",
+					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxMjM5MWEyODliN2MyODc5MjliZDY3YiIsImVtYWlsIjoibmFjaG9AZ21haWwuY29tIn0sImlhdCI6MTYyOTczMjEwM30.nbPb4z74oXIm3fbImUWFzDH6GoOenQiPeQiSgLx7gYo\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -135,40 +148,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/logout",
+					"raw": "http://localhost:5000/logout",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "4000",
+					"port": "5000",
 					"path": [
 						"logout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "user profile",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjIyMTI4MjQ5LCJleHAiOjE2MjIxMjgzMDl9.6NSMDLGwutd9pnFufGtku-oQag4Hw23nh8NZ1MvUZis",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:4000/user/profile",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "4000",
-					"path": [
-						"user",
-						"profile"
 					]
 				}
 			},
