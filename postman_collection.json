@@ -87,7 +87,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7fSwiaWF0IjoxNjI5NzMyMzAyLCJleHAiOjE2Mjk3MzIzNjJ9.OQVrMnJ8rL5j45vJ4eTOARqHng7J8Dml20RR-ojFEQU",
+						"value": "<place here the bearer token>",
 						"type": "text"
 					}
 				],
