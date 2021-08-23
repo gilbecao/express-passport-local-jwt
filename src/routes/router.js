@@ -1,24 +1,25 @@
-const passport = require('passport');
 const { Router } = require('express');
+const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
-let refreshTokens = [];
-const authRoutes = Router();
+const router = new Router();
 
-authRoutes.post(
-  '/signup',
+let refreshTokens = [];
+
+router.post(
+  '/register',
   passport.authenticate('signup', { session: false }),
-  async (req, res) => {
-    res.json({
-      message: 'Signup successful',
+  (req, res) => {
+    res.send({
       user: req.user,
+      message: 'Register works',
     });
   },
 );
 
-authRoutes.post(
+router.post(
   '/login',
-  async (req, res, next) => {
+  async (req, res, done) => {
     passport.authenticate(
       'login',
       async (err, user) => {
@@ -26,16 +27,18 @@ authRoutes.post(
           if (err || !user) {
             const error = new Error('An error occurred.');
 
-            return next(error);
+            return done(error);
           }
 
           return req.login(
             user,
             { session: false },
             async (error) => {
-              if (error) return next(error);
+              if (error) return done(error);
 
+              // eslint-disable-next-line no-underscore-dangle
               const data = { _id: user._id, email: user.email };
+
               const token = jwt.sign(
                 { user: data },
                 process.env.JWT_SECRET,
@@ -55,48 +58,66 @@ authRoutes.post(
             },
           );
         } catch (error) {
-          return next(error);
+          return done(error);
         }
       },
-    )(req, res, next);
+    )(req, res, done);
   },
 );
 
-authRoutes.post('/token', (req, res) => {
-  const { token } = req.body;
+router.get(
+  '/protected',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => res.json({
+    user: req.user,
+    message: 'Protected works',
+  }),
+);
 
-  if (!token) {
+router.get(
+  '/unprotected',
+  (req, res) => res.send({
+    user: req.user,
+    message: 'Unprotected works',
+  }),
+);
+
+router.post('/refreshToken', (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
     return res.sendStatus(401);
   }
 
-  if (!refreshTokens.includes(token)) {
+  if (!refreshTokens.includes(refreshToken)) {
     return res.sendStatus(403);
   }
 
-  return jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  return jwt.verify(refreshToken, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       return res.sendStatus(403);
     }
 
+    // eslint-disable-next-line no-underscore-dangle
     const data = { _id: user._id, email: user.email };
 
-    const accessToken = jwt.sign(
+    const token = jwt.sign(
       { user: data },
       process.env.JWT_SECRET,
       { expiresIn: '1m' },
     );
 
     return res.json({
-      accessToken,
+      token,
     });
   });
 });
 
-authRoutes.post('/logout', (req, res) => {
-  const { token } = req.body;
-  refreshTokens = refreshTokens.filter((current) => current !== token);
+router.post('/logout', (req, res) => {
+  const { refreshToken } = req.body;
+  refreshTokens = refreshTokens.filter((current) => current !== refreshToken);
 
   res.send('Logout successful');
 });
 
-module.exports = authRoutes;
+module.exports = router;
