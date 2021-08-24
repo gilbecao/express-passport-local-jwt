@@ -7,9 +7,9 @@ passport.use(
       secretOrKey: process.env.JWT_SECRET,
       jwtFromRequest: JWTstrategy.ExtractJwt.fromAuthHeaderAsBearerToken(),
     },
-    async (token, done) => {
+    async ({ user }, done) => {
       try {
-        return done(null, token.user);
+        return done(null, user);
       } catch (error) {
         return done(error);
       }
