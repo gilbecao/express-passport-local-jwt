@@ -87,7 +87,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "<place here the bearer token>",
+						"value": "",
 						"type": "text"
 					}
 				],
@@ -112,7 +112,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxMjM5MWEyODliN2MyODc5MjliZDY3YiIsImVtYWlsIjoibmFjaG9AZ21haWwuY29tIn0sImlhdCI6MTYyOTczMjEwM30.nbPb4z74oXIm3fbImUWFzDH6GoOenQiPeQiSgLx7gYo\"\n}",
+					"raw": "{\n    \"refreshToken\": \"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -140,7 +140,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxMjM5MWEyODliN2MyODc5MjliZDY3YiIsImVtYWlsIjoibmFjaG9AZ21haWwuY29tIn0sImlhdCI6MTYyOTczMjEwM30.nbPb4z74oXIm3fbImUWFzDH6GoOenQiPeQiSgLx7gYo\"\n}",
+					"raw": "{\n    \"refreshToken\": \"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

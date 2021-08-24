@@ -9,9 +9,9 @@ let refreshTokens = [];
 router.post(
   '/register',
   passport.authenticate('signup', { session: false }),
-  (req, res) => {
+  ({ user }, res) => {
     res.send({
-      user: req.user,
+      user,
       message: 'Register works',
     });
   },
@@ -19,105 +19,87 @@ router.post(
 
 router.post(
   '/login',
-  async (req, res, done) => {
-    passport.authenticate(
-      'login',
-      async (err, user) => {
-        try {
-          if (err || !user) {
-            const error = new Error('An error occurred.');
+  passport.authenticate('login', { session: false }),
+  ({ user }, res) => {
+    const data = { _id: user._id, email: user.email };
+    try {
+      const token = jwt.sign(
+        { user: data },
+        process.env.JWT_SECRET,
+        { expiresIn: '1m' },
+      );
+      const refreshToken = jwt.sign(
+        { user: data },
+        process.env.JWT_SECRET,
+      );
 
-            return done(error);
-          }
+      refreshTokens.push(refreshToken);
 
-          return req.login(
-            user,
-            { session: false },
-            async (error) => {
-              if (error) return done(error);
-
-              // eslint-disable-next-line no-underscore-dangle
-              const data = { _id: user._id, email: user.email };
-
-              const token = jwt.sign(
-                { user: data },
-                process.env.JWT_SECRET,
-                { expiresIn: '1m' },
-              );
-              const refreshToken = jwt.sign(
-                { user: data },
-                process.env.JWT_SECRET,
-              );
-
-              refreshTokens.push(refreshToken);
-
-              return res.json({
-                token,
-                refreshToken,
-              });
-            },
-          );
-        } catch (error) {
-          return done(error);
-        }
-      },
-    )(req, res, done);
+      return res.json({
+        token,
+        refreshToken,
+      });
+    } catch (error) {
+      res.status(500);
+      return res.send(error);
+    }
   },
 );
 
 router.get(
   '/protected',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => res.json({
-    user: req.user,
+  ({ user }, res) => res.json({
+    user,
     message: 'Protected works',
   }),
 );
 
 router.get(
   '/unprotected',
-  (req, res) => res.send({
-    user: req.user,
+  ({ user }, res) => res.send({
+    user,
     message: 'Unprotected works',
   }),
 );
 
-router.post('/refreshToken', (req, res) => {
-  const { refreshToken } = req.body;
+router.post(
+  '/refreshToken',
+  ({ body: { refreshToken } }, res) => {
+    if (!refreshToken) {
+      return res.sendStatus(401);
+    }
 
-  if (!refreshToken) {
-    return res.sendStatus(401);
-  }
-
-  if (!refreshTokens.includes(refreshToken)) {
-    return res.sendStatus(403);
-  }
-
-  return jwt.verify(refreshToken, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
+    if (!refreshTokens.includes(refreshToken)) {
       return res.sendStatus(403);
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    const data = { _id: user._id, email: user.email };
+    return jwt.verify(refreshToken, process.env.JWT_SECRET, (err, { user }) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
 
-    const token = jwt.sign(
-      { user: data },
-      process.env.JWT_SECRET,
-      { expiresIn: '1m' },
-    );
+      const data = { _id: user._id, email: user.email };
 
-    return res.json({
-      token,
+      const token = jwt.sign(
+        { user: data },
+        process.env.JWT_SECRET,
+        { expiresIn: '1m' },
+      );
+
+      return res.json({
+        token,
+      });
     });
-  });
-});
+  },
+);
 
-router.post('/logout', (req, res) => {
-  const { refreshToken } = req.body;
-  refreshTokens = refreshTokens.filter((current) => current !== refreshToken);
-
-  res.send('Logout successful');
-});
+router.post(
+  '/logout',
+  ({ body: { refreshToken } }, res) => {
+    refreshTokens = refreshTokens.filter((current) => current !== refreshToken);
+    res.send('Logout successful');
+  },
+);
 
 module.exports = router;
